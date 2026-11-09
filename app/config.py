@@ -46,10 +46,10 @@ class Settings(BaseSettings):
     S3_BUCKET_NAME: str = "department-documents"
     S3_USE_SSL: bool = False
 
-    # AI & Embeddings
+    # AI & Embeddings (Free Hugging Face local model)
     OPENAI_API_KEY: Optional[str] = None
-    EMBEDDING_MODEL_NAME: str = "text-embedding-3-small"
-    EMBEDDING_DIMENSION: int = 1536
+    EMBEDDING_MODEL_NAME: str = "BAAI/bge-small-en-v1.5"
+    EMBEDDING_DIMENSION: int = 384
     RERANKER_MODEL_NAME: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
 

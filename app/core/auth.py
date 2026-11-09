@@ -1,26 +1,27 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Any, Union
 import jwt
-from passlib.context import CryptContext
+import bcrypt
 
 from app.config import settings
 
-# Setup password hashing context using bcrypt
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 # ==========================================
-# Password Hashing & Verification
+# Password Hashing & Verification (Native Bcrypt)
 # ==========================================
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verifies a plain-text password against the stored bcrypt hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    pw_bytes = plain_password.encode("utf-8")[:72]
+    hash_bytes = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(pw_bytes, hash_bytes)
 
 
 def get_password_hash(password: str) -> str:
     """Hashes a password with a random salt using bcrypt."""
-    return pwd_context.hash(password)
+    pw_bytes = password.encode("utf-8")[:72]
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(pw_bytes, salt).decode("utf-8")
 
 
 # ==========================================
@@ -51,4 +52,3 @@ def decode_access_token(token: str) -> Optional[dict]:
         return payload
     except jwt.PyJWTError:
         return None
-
